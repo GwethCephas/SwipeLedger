@@ -1,10 +1,12 @@
 package com.cephcoding.feature.parser
 
 import android.util.Log
-import com.cephcoding.feature.parser.ml.LocalClassifier
-import com.cephcoding.feature.parser.model.ExpenseCategory
-import com.cephcoding.feature.parser.model.RawTransaction
-import com.cephcoding.feature.parser.model.TransactionType
+import com.cephcoding.feature.sms.ml.LocalClassifier
+import com.cephcoding.core.domain.model.ExpenseCategory
+import com.cephcoding.core.domain.model.RawTransaction
+import com.cephcoding.core.domain.model.TransactionType
+import com.cephcoding.feature.sms.parser.RegexParser
+import com.cephcoding.feature.sms.TransactionProcessor
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
