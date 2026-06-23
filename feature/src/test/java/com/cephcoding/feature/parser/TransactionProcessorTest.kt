@@ -1,6 +1,8 @@
 package com.cephcoding.feature.parser
 
 import android.util.Log
+import com.cephcoding.feature.parser.ml.LocalClassifier
+import com.cephcoding.feature.parser.model.ExpenseCategory
 import com.cephcoding.feature.parser.model.RawTransaction
 import com.cephcoding.feature.parser.model.TransactionType
 import io.mockk.every
@@ -17,7 +19,8 @@ import org.junit.Test
 class TransactionProcessorTest {
 
     private val regexParser: RegexParser = mockk()
-    private val transactionProcessor = TransactionProcessor(regexParser)
+    private val localClassifier: LocalClassifier = mockk()
+    private val transactionProcessor = TransactionProcessor(regexParser, localClassifier)
 
     @Before
     fun setUp() {
@@ -56,6 +59,8 @@ class TransactionProcessorTest {
         )
 
         every { regexParser.parse(body) } returns expectedTransaction
+
+        every { localClassifier.classify(expectedTransaction) } returns ExpenseCategory.INVENTORY
 
         transactionProcessor.processIncomingSms(sender = sender, body = body)
 
