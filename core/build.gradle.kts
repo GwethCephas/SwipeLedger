@@ -33,6 +33,9 @@ dependencies {
     implementation(libs.bundles.room)
     ksp(libs.androidx.room.compiler)
 
+    //Koin
+    implementation(libs.bundles.koin)
+
     // SQLCipher
     implementation(libs.sqlcipher.android)
 
