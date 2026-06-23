@@ -1,6 +1,7 @@
 package com.cephcoding.feature.parser
 
-import com.cephcoding.feature.parser.model.TransactionType
+import com.cephcoding.core.domain.model.TransactionType
+import com.cephcoding.feature.sms.parser.RegexParser
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertNull
