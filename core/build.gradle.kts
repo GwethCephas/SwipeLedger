@@ -24,6 +24,8 @@ android {
 dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.material3)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -40,6 +42,7 @@ dependencies {
 
     // SQLCipher
     implementation(libs.sqlcipher.android)
+    implementation(libs.androidx.sqlite)
 
     // Biometric
     implementation(libs.androidx.biometric)
