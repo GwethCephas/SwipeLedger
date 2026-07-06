@@ -11,6 +11,6 @@ val smsModule = module {
 
     single { LocalClassifier() }
 
-    single { TransactionProcessor(get(), get()) }
+    single { TransactionProcessor(get(), get(), get()) }
 
 }
