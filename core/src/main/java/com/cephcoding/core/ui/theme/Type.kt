@@ -1,4 +1,4 @@
-package com.cephcoding.swipeledger.ui.theme
+package com.cephcoding.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

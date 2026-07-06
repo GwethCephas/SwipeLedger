@@ -1,4 +1,4 @@
-package com.cephcoding.swipeledger.ui.theme
+package com.cephcoding.core.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
