@@ -19,6 +19,7 @@ koin = "4.2.2"
 
 room = "2.8.4"
 ksp = "2.3.6"
+sqlite = "2.6.2"
 sqlcipherAndroid = "4.16.0"
 
 languageId = "17.0.6"
@@ -33,6 +34,7 @@ language-id = { module = "com.google.mlkit:language-id", version.ref = "language
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite" }
 sqlcipher-android = { module = "net.zetetic:sqlcipher-android", version.ref = "sqlcipherAndroid" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
