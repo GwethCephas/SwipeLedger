@@ -10,6 +10,7 @@ import org.koin.core.context.startKoin
 class SwipeLedgerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        System.loadLibrary("sqlcipher")
         startKoin {
             androidContext(this@SwipeLedgerApplication)
             modules(
