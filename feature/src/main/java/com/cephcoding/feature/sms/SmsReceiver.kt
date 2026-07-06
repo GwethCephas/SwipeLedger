@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +16,7 @@ class SmsReceiver : BroadcastReceiver(), KoinComponent {
     private val transactionProcessor: TransactionProcessor by inject()
     private val scope = CoroutineScope(Dispatchers.Default)
     override fun onReceive(context: Context?, intent: Intent) {
+        Log.d("SwipeLedgerSMS", "Broadcast received! Action: ${intent.action}")
         if (intent.action == Telephony.Sms.Intents.SMS_RECEIVED_ACTION) {
             val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
 
@@ -22,6 +24,7 @@ class SmsReceiver : BroadcastReceiver(), KoinComponent {
                 val sender = sms.displayOriginatingAddress ?: continue
                 val messageBody = sms.displayMessageBody ?: continue
 
+                Log.d("SwipeLedgerSMS", "Raw SMS Intercepted -> From: $sender | Body: $messageBody")
                 scope.launch {
                     transactionProcessor.processIncomingSms(sender = sender, body = messageBody)
                 }
