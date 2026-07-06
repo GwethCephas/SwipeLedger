@@ -15,11 +15,12 @@ class TransactionRepositoryImpl(
 ) : TransactionRepository {
     override suspend fun insertTransaction(transaction: RawTransaction) {
         try {
+            Log.d("SwipeLedgerDB", "Attempting to insert transaction: ${transaction.transactionId}")
             transactionsDao.insertTransaction(transactionEntity = transaction.toTransactionEntity())
+            Log.d("SwipeLedgerDB", "Successfully inserted transaction: ${transaction.transactionId}")
         } catch (e: Exception) {
-            Log.d("TransactionRepositoryImpl", "$e")
+            Log.e("SwipeLedgerDB", "Failed to insert transaction ${transaction.transactionId}: ${e.message}", e)
         }
-
     }
 
     override fun getAllTransactions(): Flow<List<RawTransaction>> {
