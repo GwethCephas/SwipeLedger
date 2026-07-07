@@ -46,4 +46,7 @@ dependencies {
     //Koin
     implementation(libs.bundles.koin)
 
+    //Work Manager
+    implementation(libs.work.runtime.ktx)
+
 }
