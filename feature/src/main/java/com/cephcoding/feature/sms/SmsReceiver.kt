@@ -5,31 +5,41 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import androidx.work.BackoffPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.cephcoding.feature.sms.worker.SmsParseWorker
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import java.util.concurrent.TimeUnit
 
 class SmsReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val transactionProcessor: TransactionProcessor by inject()
-    private val scope = CoroutineScope(Dispatchers.Default)
-    override fun onReceive(context: Context?, intent: Intent) {
+    override fun onReceive(context: Context, intent: Intent) {
         Log.d("SwipeLedgerSMS", "Broadcast received! Action: ${intent.action}")
+
         if (intent.action == Telephony.Sms.Intents.SMS_RECEIVED_ACTION) {
             val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
 
             for (sms in messages) {
-                val sender = sms.displayOriginatingAddress ?: continue
-                val messageBody = sms.displayMessageBody ?: continue
+                val sender = sms.originatingAddress ?: "Unknown"
+                val body = sms.messageBody ?: ""
 
-                Log.d("SwipeLedgerSMS", "Raw SMS Intercepted -> From: $sender | Body: $messageBody")
-                scope.launch {
-                    transactionProcessor.processIncomingSms(sender = sender, body = messageBody)
-                }
+                val inputData = workDataOf(
+                    SmsParseWorker.KEY_SENDER to sender,
+                    SmsParseWorker.KEY_BODY to body
+                )
+
+                // Build an expedited background work request
+                val workRequest = OneTimeWorkRequestBuilder<SmsParseWorker>()
+                    .setInputData(inputData)
+                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.SECONDS)
+                    .build()
+
+                WorkManager.getInstance(context.applicationContext).enqueue(workRequest)
             }
-
         }
     }
 }
