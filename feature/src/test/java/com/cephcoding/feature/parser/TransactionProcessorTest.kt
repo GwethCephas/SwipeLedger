@@ -5,6 +5,7 @@ import com.cephcoding.feature.sms.ml.LocalClassifier
 import com.cephcoding.core.domain.model.ExpenseCategory
 import com.cephcoding.core.domain.model.RawTransaction
 import com.cephcoding.core.domain.model.TransactionType
+import com.cephcoding.core.domain.repository.TransactionRepository
 import com.cephcoding.feature.sms.parser.RegexParser
 import com.cephcoding.feature.sms.TransactionProcessor
 import io.mockk.every
@@ -22,7 +23,8 @@ class TransactionProcessorTest {
 
     private val regexParser: RegexParser = mockk()
     private val localClassifier: LocalClassifier = mockk()
-    private val transactionProcessor = TransactionProcessor(regexParser, localClassifier)
+    private  val repository: TransactionRepository = mockk()
+    private val transactionProcessor = TransactionProcessor(regexParser, localClassifier, repository)
 
     @Before
     fun setUp() {
