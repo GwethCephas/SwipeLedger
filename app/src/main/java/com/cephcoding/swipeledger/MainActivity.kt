@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import com.cephcoding.feature.dashboard.presentation.DashboardScreen
 import com.cephcoding.feature.dashboard.presentation.DashboardViewModel
 import com.cephcoding.core.ui.theme.SwipeLedgerTheme
+import com.cephcoding.swipeledger.navigation.NavGraph
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
@@ -22,20 +23,23 @@ class MainActivity : ComponentActivity() {
         if (isGranted) {
             Toast.makeText(this, "SMS parsing active!", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(this, "Permission required to automate ledger logs.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Permission required to automate ledger logs.", Toast.LENGTH_LONG)
+                .show()
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         checkSmsPermission()
         setContent {
             SwipeLedgerTheme {
-                val viewModel = koinViewModel<DashboardViewModel>()
-                DashboardScreen(viewModel)
+                val dashboardViewModel = koinViewModel<DashboardViewModel>()
+                NavGraph(dashboardViewModel = dashboardViewModel)
             }
         }
     }
+
     private fun checkSmsPermission() {
         when {
             ContextCompat.checkSelfPermission(
@@ -44,6 +48,7 @@ class MainActivity : ComponentActivity() {
             ) == PackageManager.PERMISSION_GRANTED -> {
                 // Already authorized! Background pipeline is good to go.
             }
+
             else -> {
                 // Trigger the system request dialog prompt
                 requestPermissionLauncher.launch(Manifest.permission.RECEIVE_SMS)
