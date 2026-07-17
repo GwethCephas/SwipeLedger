@@ -8,8 +8,8 @@ sealed class NavRoutes(
     val icon: Int? = null
 ) {
     object Dashboard : NavRoutes(
-        route = "overview",
-        title = "Overview",
+        route = "dashboard",
+        title = "Dashboard",
         icon = R.drawable.ic_overview,
     )
 
