@@ -5,24 +5,31 @@ import androidx.lifecycle.viewModelScope
 import com.cephcoding.core.domain.model.ExpenseCategory
 import com.cephcoding.core.domain.model.TransactionType
 import com.cephcoding.core.domain.repository.TransactionRepository
+import com.cephcoding.feature.dashboard.model.DailyFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class DashboardViewModel(
     private val repository: TransactionRepository
-): ViewModel() {
+) : ViewModel() {
 
     val uiState: StateFlow<DashboardUiState> = repository.getAllTransactions()
         .map { transactions ->
+            val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
             if (transactions.isEmpty()) {
                 DashboardUiState.Success(
                     transactions = emptyList(),
                     totalIncome = 0.0,
                     totalExpenses = 0.0,
                     netCashFlow = 0.0,
-                    expenseBreakdown = emptyMap()
+                    expenseBreakdown = emptyMap(),
+                    weeklyFlow = daysOfWeek.map { DailyFlow(it, 0f) }
                 )
             } else {
                 val totalIncome = transactions
@@ -39,12 +46,28 @@ class DashboardViewModel(
                     .groupBy { it.category ?: ExpenseCategory.UNCATEGORIZED }
                     .mapValues { entry -> entry.value.sumOf { it.amount } }
 
+                val dateFormat = SimpleDateFormat("EEE", Locale.US)
+                val weeklyFlowMap = transactions
+                    .filter { it.type == TransactionType.EXPENSE }
+                    .groupBy {
+                        val calendar = Calendar.getInstance().apply {
+                            timeInMillis = it.timestamp
+                        }
+                        dateFormat.format(calendar.time)
+                    }
+                    .mapValues { it.value.sumOf { it.amount }.toFloat() }
+
+                val weeklyFlow = daysOfWeek.map { day ->
+                    DailyFlow(day, weeklyFlowMap[day] ?: 0f)
+                }
+
                 DashboardUiState.Success(
                     transactions = transactions,
                     totalIncome = totalIncome,
                     totalExpenses = totalExpenses,
                     netCashFlow = totalIncome - totalExpenses,
-                    expenseBreakdown = breakdown
+                    expenseBreakdown = breakdown,
+                    weeklyFlow = weeklyFlow
                 )
             }
         }
@@ -53,5 +76,4 @@ class DashboardViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = DashboardUiState.Loading
         )
-
 }

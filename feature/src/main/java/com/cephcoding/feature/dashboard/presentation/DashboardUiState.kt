@@ -2,6 +2,7 @@ package com.cephcoding.feature.dashboard.presentation
 
 import com.cephcoding.core.domain.model.ExpenseCategory
 import com.cephcoding.core.domain.model.RawTransaction
+import com.cephcoding.feature.dashboard.model.DailyFlow
 
 interface DashboardUiState {
     object Loading : DashboardUiState
@@ -11,6 +12,7 @@ interface DashboardUiState {
         val totalIncome: Double,
         val totalExpenses: Double,
         val netCashFlow: Double,
-        val expenseBreakdown: Map<ExpenseCategory, Double>
+        val expenseBreakdown: Map<ExpenseCategory, Double>,
+        val weeklyFlow: List<DailyFlow>
     ) : DashboardUiState
 }
