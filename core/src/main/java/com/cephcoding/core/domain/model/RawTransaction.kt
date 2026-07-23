@@ -6,6 +6,7 @@ data class RawTransaction(
     val party: String,
     val type: TransactionType,
     val rawBody: String,
+    val timestamp: Long = System.currentTimeMillis(),
     val category: ExpenseCategory? = null
 )
 

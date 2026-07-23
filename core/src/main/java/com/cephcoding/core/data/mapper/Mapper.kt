@@ -12,7 +12,8 @@ fun RawTransaction.toTransactionEntity(): TransactionEntity {
         party = this.party,
         type = this.type.name,
         category = this.category?.name ?: ExpenseCategory.UNCATEGORIZED.name,
-        rawBody = this.rawBody
+        rawBody = this.rawBody,
+        timestamp = this.timestamp
     )
 }
 
@@ -33,6 +34,7 @@ fun TransactionEntity.toRawTransaction(): RawTransaction {
             e.printStackTrace()
             ExpenseCategory.UNCATEGORIZED
         },
-        rawBody = this.rawBody
+        rawBody = this.rawBody,
+        timestamp = this.timestamp
     )
 }
