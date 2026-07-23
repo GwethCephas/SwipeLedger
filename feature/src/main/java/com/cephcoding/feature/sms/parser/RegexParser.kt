@@ -33,7 +33,7 @@ class RegexParser {
                 "Match Found (SENT): ID=$id, Amount=$amount, Party=$party"
             )
 
-            return RawTransaction(id, amount, party, TransactionType.EXPENSE, cleanBody)
+            return RawTransaction(id, amount, party, TransactionType.EXPENSE, cleanBody, System.currentTimeMillis())
         }
 
         RECEIVED_PATTERN.find(cleanBody)?.let { match ->
@@ -46,7 +46,7 @@ class RegexParser {
                 "SwipeLedgerParser",
                 "Match Found (RECEIVED): ID=$id, Amount=$amount, Party=$party"
             )
-            return RawTransaction(id, amount, party, TransactionType.INCOME, cleanBody)
+            return RawTransaction(id, amount, party, TransactionType.INCOME, cleanBody, System.currentTimeMillis())
         }
 
         Log.w("SwipeLedgerParser", "No regex match found for SMS body.")
