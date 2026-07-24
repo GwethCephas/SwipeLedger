@@ -11,23 +11,55 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = BlueAccent,
-    background = BackgroundDark,
-    surface = SurfaceDark,
-    onBackground = TextPrimary,
-    onSurface = TextPrimary,
-    outline = OutlineDark,
-    error = RedExpense
+    primary = DarkTealPrimary,
+    onPrimary = ObsidianBg, // Dark text on bright primary
+    primaryContainer = SteelBlue,
+    onPrimaryContainer = TextHighEmphasis,
+
+    secondary = SteelBlue,
+    onSecondary = TextMediumEmphasis,
+
+    tertiary = BrightCyanAccent, // Accent is mapped to Tertiary
+    onTertiary = ObsidianBg,
+
+    background = ObsidianBg,
+    onBackground = TextHighEmphasis,
+
+    surface = DarkCharcoal, // Card & popover colors
+    onSurface = TextHighEmphasis,
+    surfaceVariant = SlateGray, // Muted colors mapping
+    onSurfaceVariant = TextMuted,
+
+    error = CoralDestructive,
+    onError = onError,
+
+    outline = DarkTealPrimary.copy(alpha = 0.15f) // Matches your border
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = BlueAccent,
-    background = BackgroundLight,
-    surface = SurfaceLight,
-    onBackground = TextPrimaryLight,
-    onSurface = TextPrimaryLight,
-    outline = OutlineLight,
-    error = RedExpense
+    primary = DarkTealPrimary,
+    onPrimary = ObsidianBg, // Dark text on bright primary
+    primaryContainer = SteelBlue,
+    onPrimaryContainer = TextHighEmphasis,
+
+    secondary = SteelBlue,
+    onSecondary = TextMediumEmphasis,
+
+    tertiary = BrightCyanAccent, // Accent is mapped to Tertiary
+    onTertiary = ObsidianBg,
+
+    background = ObsidianBg,
+    onBackground = TextHighEmphasis,
+
+    surface = DarkCharcoal, // Card & popover colors
+    onSurface = TextHighEmphasis,
+    surfaceVariant = SlateGray, // Muted colors mapping
+    onSurfaceVariant = TextMuted,
+
+    error = CoralDestructive,
+    onError = onError,
+
+    outline = DarkTealPrimary.copy(alpha = 0.15f) // Matches your border
 )
 
 @Composable
