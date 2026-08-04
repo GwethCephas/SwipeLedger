@@ -3,16 +3,6 @@ package com.cephcoding.core.data.database
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-/**
- * Best-effort remapping of the old flat ExpenseCategory taxonomy (INVENTORY,
- * TRANSPORT, UTILITIES, MARKETING, SOFTWARE_SAAS, UNCATEGORIZED) into the new
- * hierarchical TransactionCategory/TransactionSubcategory taxonomy. This is
- * lossy for historical rows -- e.g. an old TRANSPORT row could originally have
- * been fuel, a ride, or a courier fee, and SQL has no access to the original
- * SMS body at migration time to disambiguate further -- but it is strictly
- * better than the pre-migration state, where every INCOME row was stored as
- * UNCATEGORIZED.
- */
 object Migrations {
     val MIGRATION_1_2 = object : Migration(1, 2) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -45,10 +35,6 @@ object Migrations {
                 """.trimIndent()
             )
 
-            // Old code always stored UNCATEGORIZED for income; force every
-            // INCOME row onto the new INCOME/GENERAL_INCOME pair regardless of
-            // whatever it held before -- this retroactively fixes the
-            // income-never-categorized bug for existing on-device data.
             db.execSQL(
                 "UPDATE transactions SET category = 'INCOME', subcategory = 'GENERAL_INCOME' WHERE type = 'INCOME'"
             )
