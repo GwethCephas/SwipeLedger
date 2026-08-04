@@ -1,6 +1,8 @@
 package com.cephcoding.feature.events.presentation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +36,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -66,6 +72,7 @@ fun EventsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showAddDialog by remember { mutableStateOf(false) }
+    var eventPendingDelete by remember { mutableStateOf<RecurringEvent?>(null) }
 
     Box(
         modifier = modifier
@@ -96,7 +103,7 @@ fun EventsScreen(
                     }
 
                     items(state.upcomingEvents) { event ->
-                        EventCard(event = event)
+                        EventCard(event = event, onLongPress = { eventPendingDelete = event })
                     }
 
                     item {
@@ -105,7 +112,7 @@ fun EventsScreen(
                     }
 
                     items(state.pastEvents) { event ->
-                        EventCard(event = event)
+                        EventCard(event = event, onLongPress = { eventPendingDelete = event })
                     }
                 }
             }
@@ -128,6 +135,36 @@ fun EventsScreen(
             }
         )
     }
+
+    eventPendingDelete?.let { event ->
+        DeleteEventDialog(
+            event = event,
+            onConfirm = {
+                viewModel.deleteEvent(event.id)
+                eventPendingDelete = null
+            },
+            onDismiss = { eventPendingDelete = null }
+        )
+    }
+}
+
+@Composable
+private fun DeleteEventDialog(event: RecurringEvent, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Delete event?") },
+        text = { Text("\"${event.title}\" will be removed" + if (event.isUpcoming) " and its reminder cancelled." else " from your history.") },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Delete", color = CoralDestructive)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }
 
 @Composable
@@ -159,10 +196,20 @@ fun SectionTitle(title: String) {
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun EventCard(event: RecurringEvent) {
+fun EventCard(event: RecurringEvent, onLongPress: () -> Unit = {}) {
+    val haptics = LocalHapticFeedback.current
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = {},
+                onLongClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLongPress()
+                }
+            ),
         color = SlateGray.copy(alpha = 0.5f),
         shape = RoundedCornerShape(20.dp),
         border = androidx.compose.foundation.BorderStroke(1.dp, SteelBlue.copy(alpha = 0.3f))
