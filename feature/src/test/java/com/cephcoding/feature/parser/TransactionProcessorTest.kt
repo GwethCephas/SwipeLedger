@@ -2,8 +2,8 @@ package com.cephcoding.feature.parser
 
 import android.util.Log
 import com.cephcoding.feature.sms.ml.LocalClassifier
-import com.cephcoding.core.domain.model.ExpenseCategory
 import com.cephcoding.core.domain.model.RawTransaction
+import com.cephcoding.core.domain.model.TransactionSubcategory
 import com.cephcoding.core.domain.model.TransactionType
 import com.cephcoding.core.domain.repository.TransactionRepository
 import com.cephcoding.feature.sms.parser.RegexParser
@@ -64,7 +64,7 @@ class TransactionProcessorTest {
 
         every { regexParser.parse(body) } returns expectedTransaction
 
-        every { localClassifier.classify(expectedTransaction) } returns ExpenseCategory.INVENTORY
+        every { localClassifier.classify(expectedTransaction) } returns TransactionSubcategory.SHOPPING_AND_ELECTRONICS
 
         transactionProcessor.processIncomingSms(sender = sender, body = body)
 

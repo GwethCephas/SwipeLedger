@@ -30,8 +30,8 @@ class TransactionProcessor(
                 "Transaction Parsed Successfully! ID: ${rawTransaction.transactionId}, Amount: ${rawTransaction.amount}, Party: ${rawTransaction.party}"
             )
 
-            val category = localClassifier.classify(rawTransaction)
-            val finalizedTransaction = rawTransaction.copy(category = category)
+            val subcategory = localClassifier.classify(rawTransaction)
+            val finalizedTransaction = rawTransaction.copy(subcategory = subcategory)
 
             saveToEncryptedLedger(finalizedTransaction)
         } else {
