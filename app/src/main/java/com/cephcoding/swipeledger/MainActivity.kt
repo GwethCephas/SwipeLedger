@@ -2,6 +2,7 @@ package com.cephcoding.swipeledger
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -27,10 +28,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val requestNotificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { /* no-op: reminders simply won't show if denied */ }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         checkSmsPermission()
+        checkNotificationPermission()
         setContent {
             SwipeLedgerTheme {
                 val dashboardViewModel = koinViewModel<DashboardViewModel>()
@@ -52,6 +58,18 @@ class MainActivity : ComponentActivity() {
                 // Trigger the system request dialog prompt
                 requestPermissionLauncher.launch(Manifest.permission.RECEIVE_SMS)
             }
+        }
+    }
+
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 }

@@ -52,4 +52,7 @@ dependencies {
 
     //Navigation compose
     implementation(libs.androidx.navigation.compose)
+
+    // Room
+    implementation(libs.bundles.room)
 }

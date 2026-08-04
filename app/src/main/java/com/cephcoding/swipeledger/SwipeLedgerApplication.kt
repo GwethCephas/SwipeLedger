@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.work.Configuration
 import com.cephcoding.core.di.coreModule
 import com.cephcoding.feature.dashboard.di.dashboardModule
+import com.cephcoding.feature.events.di.eventsModule
+import com.cephcoding.feature.events.notification.EventNotificationHelper
 import com.cephcoding.feature.sms.di.smsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.koin.workManagerFactory
@@ -20,9 +22,11 @@ class SwipeLedgerApplication : Application(), Configuration.Provider {
             modules(
                 smsModule,
                 dashboardModule,
+                eventsModule,
                 coreModule
             )
         }
+        get<EventNotificationHelper>().createNotificationChannel()
     }
 
     override val workManagerConfiguration: Configuration
