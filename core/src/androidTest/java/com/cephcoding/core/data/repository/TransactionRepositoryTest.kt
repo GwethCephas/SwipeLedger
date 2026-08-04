@@ -6,9 +6,11 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.cephcoding.core.data.database.TransactionDatabase
-import com.cephcoding.core.domain.model.ExpenseCategory
 import com.cephcoding.core.domain.model.RawTransaction
+import com.cephcoding.core.domain.model.TransactionCategory
+import com.cephcoding.core.domain.model.TransactionSubcategory
 import com.cephcoding.core.domain.model.TransactionType
+import com.cephcoding.core.domain.model.category
 import com.cephcoding.core.domain.repository.TransactionRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -56,7 +58,7 @@ class TransactionRepositoryTest {
             amount = 4500.0,
             party = "KPLC Tokens",
             type = TransactionType.EXPENSE,
-            category = ExpenseCategory.UTILITIES,
+            subcategory = TransactionSubcategory.POWER_AND_WATER,
             rawBody = "Ksh4500 paid to KPLC."
         )
 
@@ -67,7 +69,8 @@ class TransactionRepositoryTest {
         assertEquals(1, allTransactions.size)
         val extractedTransaction = allTransactions[0]
         assertEquals("MPESA_XYZ_789", extractedTransaction.transactionId)
-        assertEquals(ExpenseCategory.UTILITIES, extractedTransaction.category)
+        assertEquals(TransactionSubcategory.POWER_AND_WATER, extractedTransaction.subcategory)
+        assertEquals(TransactionCategory.HOUSING_AND_UTILITIES, extractedTransaction.category)
         assertEquals(4500.0, extractedTransaction.amount, 0.0)
     }
 }

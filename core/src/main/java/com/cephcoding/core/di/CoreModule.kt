@@ -1,6 +1,7 @@
 package com.cephcoding.core.di
 
 import androidx.room.Room
+import com.cephcoding.core.data.database.Migrations
 import com.cephcoding.core.data.database.TransactionDatabase
 import com.cephcoding.core.data.repository.TransactionRepositoryImpl
 import com.cephcoding.core.domain.repository.TransactionRepository
@@ -19,6 +20,7 @@ val coreModule = module {
             TransactionDatabase::class.java,
             "Transaction_db"
         ).openHelperFactory(factory)
+            .addMigrations(Migrations.MIGRATION_1_2)
             .build()
     }
 
