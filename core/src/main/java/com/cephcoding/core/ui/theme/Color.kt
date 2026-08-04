@@ -17,3 +17,12 @@ val TextMediumEmphasis = Color(0xFFC5C9D6)
 val TextMuted = Color(0xFF6B7A8D)
 
 val onError = Color(0xFFFFFFFF)
+
+// Category donut chart / legend colors (TransactionCategory.color())
+val CategoryHousing = Color(0xFF3987E5)
+val CategoryConnectivity = Color(0xFFD95926)
+val CategoryFoodDining = Color(0xFF199E70)
+val CategoryTransportation = Color(0xFFC98500)
+val CategoryFinancials = Color(0xFFD55181)
+val CategoryPersonalCare = Color(0xFF008300)
+val CategoryEducationFamily = Color(0xFF9085E9)

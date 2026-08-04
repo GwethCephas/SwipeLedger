@@ -25,7 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.cephcoding.core.domain.model.TransactionSubcategory
 import com.cephcoding.core.domain.model.TransactionType
+import com.cephcoding.core.domain.model.category
+import com.cephcoding.core.domain.model.displayName
 import com.cephcoding.core.ui.theme.TextHighEmphasis
 import com.cephcoding.core.ui.theme.TextMuted
 import com.cephcoding.feature.dashboard.presentation.DashboardUiState
@@ -96,8 +99,10 @@ fun TransactionsScreen(
                             typeFiltered
                         } else {
                             typeFiltered.filter { transaction ->
+                                val subcategory = transaction.subcategory ?: TransactionSubcategory.UNCATEGORIZED
                                 transaction.party.contains(debouncedSearchQuery, ignoreCase = true) ||
-                                        transaction.category?.name?.contains(debouncedSearchQuery, ignoreCase = true) == true ||
+                                        transaction.category.displayName.contains(debouncedSearchQuery, ignoreCase = true) ||
+                                        subcategory.displayName.contains(debouncedSearchQuery, ignoreCase = true) ||
                                         transaction.amount.toString().contains(debouncedSearchQuery)
                             }
                         }

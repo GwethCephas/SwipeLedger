@@ -1,7 +1,8 @@
 package com.cephcoding.feature.dashboard.presentation
 
-import com.cephcoding.core.domain.model.ExpenseCategory
 import com.cephcoding.core.domain.model.RawTransaction
+import com.cephcoding.core.domain.model.TransactionCategory
+import com.cephcoding.core.domain.model.TransactionSubcategory
 import com.cephcoding.core.domain.model.TransactionType
 import com.cephcoding.core.domain.repository.TransactionRepository
 import com.cephcoding.feature.dashboard.common.MainDispatcherRule
@@ -64,7 +65,7 @@ class DashboardViewModelTest {
                 amount = 5000.0,
                 party = "Client Pay",
                 type = TransactionType.INCOME,
-                category = ExpenseCategory.UNCATEGORIZED,
+                subcategory = TransactionSubcategory.GENERAL_INCOME,
                 rawBody = "Text"
             ),
             RawTransaction(
@@ -72,7 +73,7 @@ class DashboardViewModelTest {
                 amount = 1500.0,
                 party = "Wholesale Ltd",
                 type = TransactionType.EXPENSE,
-                category = ExpenseCategory.INVENTORY,
+                subcategory = TransactionSubcategory.SHOPPING_AND_ELECTRONICS,
                 rawBody = "Text"
             ),
             RawTransaction(
@@ -80,7 +81,7 @@ class DashboardViewModelTest {
                 amount = 500.0,
                 party = "Shell Station",
                 type = TransactionType.EXPENSE,
-                category = ExpenseCategory.TRANSPORT,
+                subcategory = TransactionSubcategory.FUEL_AND_GAS_STATIONS,
                 rawBody = "Text"
             ),
             RawTransaction(
@@ -88,7 +89,7 @@ class DashboardViewModelTest {
                 amount = 1000.0,
                 party = "Stock Supplier",
                 type = TransactionType.EXPENSE,
-                category = ExpenseCategory.INVENTORY,
+                subcategory = TransactionSubcategory.SHOPPING_AND_ELECTRONICS,
                 rawBody = "Text"
             )
         )
@@ -105,7 +106,7 @@ class DashboardViewModelTest {
         assertEquals(2000.0, successState.netCashFlow, 0.0)
 
         val breakdown = successState.expenseBreakdown
-        assertEquals(2500.0, breakdown[ExpenseCategory.INVENTORY] ?: 0.0, 0.0)
-        assertEquals(500.0, breakdown[ExpenseCategory.TRANSPORT] ?: 0.0, 0.0)
+        assertEquals(2500.0, breakdown[TransactionCategory.PERSONAL_CARE_AND_SHOPPING] ?: 0.0, 0.0)
+        assertEquals(500.0, breakdown[TransactionCategory.TRANSPORTATION] ?: 0.0, 0.0)
     }
 }

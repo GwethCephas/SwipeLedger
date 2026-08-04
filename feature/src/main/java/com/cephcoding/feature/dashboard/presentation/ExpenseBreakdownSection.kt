@@ -30,12 +30,13 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.cephcoding.core.domain.model.ExpenseCategory
+import com.cephcoding.core.domain.model.TransactionCategory
+import com.cephcoding.core.domain.model.displayName
 import com.cephcoding.core.ui.theme.*
 
 @Composable
 fun ExpenseBreakdownSection(
-    breakdown: Map<ExpenseCategory, Double>,
+    breakdown: Map<TransactionCategory, Double>,
     totalExpenses: Double
 ) {
     Card(
@@ -103,7 +104,7 @@ fun ExpenseBreakdownSection(
                                     .background(category.color())
                             )
                             Text(
-                                text = category.name,
+                                text = category.displayName,
                                 style = MaterialTheme.typography.labelMedium,
                                 color = TextMediumEmphasis,
                                 fontWeight = FontWeight.SemiBold
@@ -132,7 +133,7 @@ fun ExpenseBreakdownSection(
 @Composable
 fun ExpenseDonutChart(
     modifier: Modifier = Modifier,
-    breakdown: Map<ExpenseCategory, Double>,
+    breakdown: Map<TransactionCategory, Double>,
     totalExpenses: Double
 ) {
     val animationProgress = remember { Animatable(0f) }
@@ -171,13 +172,15 @@ fun ExpenseDonutChart(
     }
 }
 
-fun ExpenseCategory.color(): Color =
+fun TransactionCategory.color(): Color =
     when (this) {
-        ExpenseCategory.INVENTORY -> TextMuted
-        ExpenseCategory.TRANSPORT -> CoralDestructive
-        ExpenseCategory.UTILITIES -> TextMediumEmphasis
-        ExpenseCategory.MARKETING -> DarkTealPrimary
-        ExpenseCategory.SOFTWARE_SAAS -> TextHighEmphasis
-        ExpenseCategory.UNCATEGORIZED -> BrightCyanAccent
-
+        TransactionCategory.HOUSING_AND_UTILITIES -> CategoryHousing
+        TransactionCategory.PHONE_AND_CONNECTIVITY -> CategoryConnectivity
+        TransactionCategory.FOOD_AND_DINING -> CategoryFoodDining
+        TransactionCategory.TRANSPORTATION -> CategoryTransportation
+        TransactionCategory.FINANCIALS_AND_FEES -> CategoryFinancials
+        TransactionCategory.PERSONAL_CARE_AND_SHOPPING -> CategoryPersonalCare
+        TransactionCategory.EDUCATION_AND_FAMILY -> CategoryEducationFamily
+        TransactionCategory.UNCATEGORIZED_EXPENSE -> TextMuted
+        TransactionCategory.INCOME -> BrightCyanAccent
     }

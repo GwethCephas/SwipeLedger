@@ -16,9 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.cephcoding.core.domain.model.ExpenseCategory
 import com.cephcoding.core.domain.model.RawTransaction
+import com.cephcoding.core.domain.model.TransactionSubcategory
 import com.cephcoding.core.domain.model.TransactionType
+import com.cephcoding.core.domain.model.category
+import com.cephcoding.core.domain.model.displayName
 import com.cephcoding.core.ui.theme.*
 
 
@@ -47,8 +49,14 @@ fun TransactionRow(transaction: RawTransaction) {
                     .background(SlateGray, RoundedCornerShape(6.dp))
                     .padding(horizontal = 8.dp, vertical = 2.dp)
             ) {
+                val categoryLabel = transaction.category.displayName
+                val subcategoryLabel = (transaction.subcategory ?: TransactionSubcategory.UNCATEGORIZED).displayName
                 Text(
-                    text = (transaction.category ?: ExpenseCategory.UNCATEGORIZED).name,
+                    text = if (categoryLabel == subcategoryLabel) {
+                        categoryLabel
+                    } else {
+                        "$categoryLabel · $subcategoryLabel"
+                    },
                     style = MaterialTheme.typography.labelMedium,
                     color = TextMediumEmphasis
                 )

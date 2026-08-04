@@ -2,7 +2,7 @@ package com.cephcoding.feature.dashboard.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cephcoding.core.domain.model.ExpenseCategory
+import com.cephcoding.core.domain.model.category
 import com.cephcoding.core.domain.model.TransactionType
 import com.cephcoding.core.domain.repository.TransactionRepository
 import com.cephcoding.feature.dashboard.model.DailyFlow
@@ -43,7 +43,7 @@ class DashboardViewModel(
                 // Group expenses by category type and calculate the total weight per category
                 val breakdown = transactions
                     .filter { it.type == TransactionType.EXPENSE }
-                    .groupBy { it.category ?: ExpenseCategory.UNCATEGORIZED }
+                    .groupBy { it.category }
                     .mapValues { entry -> entry.value.sumOf { it.amount } }
 
                 val dateFormat = SimpleDateFormat("EEE", Locale.US)
