@@ -6,6 +6,7 @@ import com.cephcoding.core.di.coreModule
 import com.cephcoding.feature.dashboard.di.dashboardModule
 import com.cephcoding.feature.events.di.eventsModule
 import com.cephcoding.feature.events.notification.EventNotificationHelper
+import com.cephcoding.feature.profile.di.profileModule
 import com.cephcoding.feature.sms.di.smsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.koin.workManagerFactory
@@ -23,7 +24,8 @@ class SwipeLedgerApplication : Application(), Configuration.Provider {
                 smsModule,
                 dashboardModule,
                 eventsModule,
-                coreModule
+                coreModule,
+                profileModule
             )
         }
         get<EventNotificationHelper>().createNotificationChannel()
