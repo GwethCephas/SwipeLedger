@@ -8,4 +8,6 @@ interface TransactionRepository {
     fun getAllTransactions(): Flow<List<RawTransaction>>
 
     fun getAllTransactionsByType(type: String): Flow<List<RawTransaction>>
+
+    suspend fun deleteAllTransactions()
 }

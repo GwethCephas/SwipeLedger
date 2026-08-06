@@ -35,4 +35,8 @@ class TransactionRepositoryImpl(
             entities.map { entity -> entity.toRawTransaction() }
         }
     }
+
+    override suspend fun deleteAllTransactions() {
+        transactionsDao.deleteAllTransactions()
+    }
 }

@@ -28,6 +28,8 @@ work = "2.11.2"
 
 navigationCompose = "2.9.8"
 
+datastorePreferences = "1.2.1"
+
 [libraries]
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
@@ -36,6 +38,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 language-id = { module = "com.google.mlkit:language-id", version.ref = "languageId" }
 
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }

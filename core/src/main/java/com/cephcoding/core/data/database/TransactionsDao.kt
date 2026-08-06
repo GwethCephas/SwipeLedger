@@ -17,4 +17,7 @@ interface TransactionsDao {
 
     @Query("SELECT * FROM transactions WHERE type = :type ORDER BY timestamp DESC")
     fun getTransactionsByType(type: String): Flow<List<TransactionEntity>>
+
+    @Query("DELETE FROM transactions")
+    suspend fun deleteAllTransactions()
 }

@@ -73,4 +73,33 @@ class TransactionRepositoryTest {
         assertEquals(TransactionCategory.HOUSING_AND_UTILITIES, extractedTransaction.category)
         assertEquals(4500.0, extractedTransaction.amount, 0.0)
     }
+
+    @Test
+    fun deleteAllTransactionsRemovesAllRows() = runTest {
+        repository.insertTransaction(
+            RawTransaction(
+                transactionId = "MPESA_1",
+                amount = 100.0,
+                party = "Shop A",
+                type = TransactionType.EXPENSE,
+                subcategory = TransactionSubcategory.GROCERIES_AND_SUPERMARKET,
+                rawBody = "Ksh100 paid to Shop A."
+            )
+        )
+        repository.insertTransaction(
+            RawTransaction(
+                transactionId = "MPESA_2",
+                amount = 200.0,
+                party = "Shop B",
+                type = TransactionType.EXPENSE,
+                subcategory = TransactionSubcategory.GROCERIES_AND_SUPERMARKET,
+                rawBody = "Ksh200 paid to Shop B."
+            )
+        )
+        assertEquals(2, repository.getAllTransactions().first().size)
+
+        repository.deleteAllTransactions()
+
+        assertTrue(repository.getAllTransactions().first().isEmpty())
+    }
 }
