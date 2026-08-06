@@ -74,7 +74,8 @@ fun DashboardScreen(
                     MetricsHeaderCard(
                         netCashFlow = state.netCashFlow,
                         income = state.totalIncome,
-                        expenses = state.totalExpenses
+                        expenses = state.totalExpenses,
+                        currency = state.currency
                     )
                 }
                 item {

@@ -264,7 +264,7 @@ fun EventCard(event: RecurringEvent, onLongPress: () -> Unit = {}) {
 
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "Ksh ${event.amount}",
+                    text = event.amount,
                     color = CoralDestructive,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp

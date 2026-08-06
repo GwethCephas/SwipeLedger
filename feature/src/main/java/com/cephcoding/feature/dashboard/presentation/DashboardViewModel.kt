@@ -4,22 +4,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cephcoding.core.domain.model.category
 import com.cephcoding.core.domain.model.TransactionType
+import com.cephcoding.core.domain.repository.CurrencyPreferenceRepository
 import com.cephcoding.core.domain.repository.TransactionRepository
 import com.cephcoding.feature.dashboard.model.DailyFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 class DashboardViewModel(
-    private val repository: TransactionRepository
+    private val repository: TransactionRepository,
+    private val currencyPreferenceRepository: CurrencyPreferenceRepository
 ) : ViewModel() {
 
-    val uiState: StateFlow<DashboardUiState> = repository.getAllTransactions()
-        .map { transactions ->
+    val uiState: StateFlow<DashboardUiState> = combine(
+        repository.getAllTransactions(),
+        currencyPreferenceRepository.selectedCurrency
+    ) { transactions, currency ->
             val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 
             if (transactions.isEmpty()) {
@@ -29,7 +33,8 @@ class DashboardViewModel(
                     totalExpenses = 0.0,
                     netCashFlow = 0.0,
                     expenseBreakdown = emptyMap(),
-                    weeklyFlow = daysOfWeek.map { DailyFlow(it, 0f) }
+                    weeklyFlow = daysOfWeek.map { DailyFlow(it, 0f) },
+                    currency = currency
                 )
             } else {
                 val totalIncome = transactions
@@ -67,7 +72,8 @@ class DashboardViewModel(
                     totalExpenses = totalExpenses,
                     netCashFlow = totalIncome - totalExpenses,
                     expenseBreakdown = breakdown,
-                    weeklyFlow = weeklyFlow
+                    weeklyFlow = weeklyFlow,
+                    currency = currency
                 )
             }
         }

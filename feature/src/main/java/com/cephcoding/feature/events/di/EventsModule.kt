@@ -28,7 +28,7 @@ val eventsModule = module {
 
     single { EventNotificationHelper(androidContext()) }
 
-    viewModel { EventsViewModel(get(), get()) }
+    viewModel { EventsViewModel(get(), get(), get()) }
 
     worker { EventFireWorker(get(), get(), get(), get(), get()) }
 

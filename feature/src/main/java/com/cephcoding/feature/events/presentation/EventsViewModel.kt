@@ -3,9 +3,12 @@ package com.cephcoding.feature.events.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cephcoding.core.R
+import com.cephcoding.core.domain.currency.CurrencyConverterService
+import com.cephcoding.core.domain.model.Currency
 import com.cephcoding.core.domain.model.LedgerEvent
 import com.cephcoding.core.domain.model.NotificationTiming
 import com.cephcoding.core.domain.model.RecurrenceInterval
+import com.cephcoding.core.domain.repository.CurrencyPreferenceRepository
 import com.cephcoding.core.domain.repository.EventRepository
 import com.cephcoding.feature.events.alarm.AlarmScheduler
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -21,16 +23,18 @@ import java.util.UUID
 
 class EventsViewModel(
     private val repository: EventRepository,
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler,
+    private val currencyPreferenceRepository: CurrencyPreferenceRepository
 ) : ViewModel() {
 
     val uiState: StateFlow<EventsUiState> = combine(
         repository.getUpcomingEvents(),
-        repository.getPastEvents()
-    ) { upcoming, past ->
+        repository.getPastEvents(),
+        currencyPreferenceRepository.selectedCurrency
+    ) { upcoming, past, currency ->
         EventsUiState.Success(
-            upcomingEvents = upcoming.map { it.toDisplayModel(isUpcoming = true) },
-            pastEvents = past.map { it.toDisplayModel(isUpcoming = false) }
+            upcomingEvents = upcoming.map { it.toDisplayModel(isUpcoming = true, currency = currency) },
+            pastEvents = past.map { it.toDisplayModel(isUpcoming = false, currency = currency) }
         )
     }.stateIn(
         scope = viewModelScope,
@@ -69,14 +73,13 @@ class EventsViewModel(
     }
 }
 
-private val amountFormat = NumberFormat.getNumberInstance(Locale.US)
 private val pastDateFormat = SimpleDateFormat("MMM d", Locale.US)
 
-private fun LedgerEvent.toDisplayModel(isUpcoming: Boolean): RecurringEvent {
+private fun LedgerEvent.toDisplayModel(isUpcoming: Boolean, currency: Currency): RecurringEvent {
     return RecurringEvent(
         id = id,
         title = title,
-        amount = amountFormat.format(amount),
+        amount = CurrencyConverterService.format(amount, currency),
         status = formatStatus(nextDueDateTimestamp, isUpcoming),
         isUpcoming = isUpcoming,
         iconRes = R.drawable.ic_events,

@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.cephcoding.core.domain.currency.CurrencyConverterService
+import com.cephcoding.core.domain.model.Currency
 import com.cephcoding.core.domain.model.RawTransaction
 import com.cephcoding.core.domain.model.TransactionSubcategory
 import com.cephcoding.core.domain.model.TransactionType
@@ -25,7 +27,7 @@ import com.cephcoding.core.ui.theme.*
 
 
 @Composable
-fun TransactionRow(transaction: RawTransaction) {
+fun TransactionRow(transaction: RawTransaction, currency: Currency) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,9 +66,8 @@ fun TransactionRow(transaction: RawTransaction) {
         }
 
         Text(
-            text = "${if (transaction.type == TransactionType.INCOME) "+" else "-"} Ksh%,.2f".format(
-                transaction.amount
-            ),
+            text = "${if (transaction.type == TransactionType.INCOME) "+" else "-"} " +
+                CurrencyConverterService.format(transaction.amount, currency),
             style = MaterialTheme.typography.titleLarge,
             color = if (transaction.type == TransactionType.INCOME) BrightCyanAccent
             else CoralDestructive,

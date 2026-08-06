@@ -1,9 +1,11 @@
 package com.cephcoding.feature.dashboard.presentation
 
+import com.cephcoding.core.domain.model.Currency
 import com.cephcoding.core.domain.model.RawTransaction
 import com.cephcoding.core.domain.model.TransactionCategory
 import com.cephcoding.core.domain.model.TransactionSubcategory
 import com.cephcoding.core.domain.model.TransactionType
+import com.cephcoding.core.domain.repository.CurrencyPreferenceRepository
 import com.cephcoding.core.domain.repository.TransactionRepository
 import com.cephcoding.feature.dashboard.common.MainDispatcherRule
 import io.mockk.every
@@ -23,13 +25,16 @@ class DashboardViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val repository: TransactionRepository = mockk()
+    private val currencyPreferenceRepository: CurrencyPreferenceRepository = mockk()
     private val transactionFlow = MutableStateFlow<List<RawTransaction>>(emptyList())
+    private val currencyFlow = MutableStateFlow(Currency.KES)
 
     private lateinit var viewModel: DashboardViewModel
 
     private fun setupViewModel() {
         every { repository.getAllTransactions() } returns transactionFlow
-        viewModel = DashboardViewModel(repository)
+        every { currencyPreferenceRepository.selectedCurrency } returns currencyFlow
+        viewModel = DashboardViewModel(repository, currencyPreferenceRepository)
     }
 
     @Test
@@ -53,6 +58,22 @@ class DashboardViewModelTest {
         assertEquals(0.0, successState.totalExpenses, 0.0)
         assertEquals(0.0, successState.netCashFlow, 0.0)
         assertTrue(successState.expenseBreakdown.isEmpty())
+        assertEquals(Currency.KES, successState.currency)
+    }
+
+    @Test
+    fun `state reflects a changed currency preference emission`() = runTest {
+        setupViewModel()
+
+        transactionFlow.value = emptyList()
+        assertEquals(Currency.KES, (viewModel.uiState.first { it is DashboardUiState.Success } as DashboardUiState.Success).currency)
+
+        currencyFlow.value = Currency.USD
+
+        val state = viewModel.uiState.first {
+            it is DashboardUiState.Success && it.currency == Currency.USD
+        }
+        assertEquals(Currency.USD, (state as DashboardUiState.Success).currency)
     }
 
     @Test

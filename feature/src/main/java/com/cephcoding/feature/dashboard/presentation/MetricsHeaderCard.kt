@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.cephcoding.core.domain.currency.CurrencyConverterService
+import com.cephcoding.core.domain.model.Currency
 import com.cephcoding.core.ui.theme.BrightCyanAccent
 import com.cephcoding.core.ui.theme.CoralDestructive
 import com.cephcoding.core.ui.theme.DarkCharcoal
@@ -34,7 +36,8 @@ import com.cephcoding.core.ui.theme.TextMediumEmphasis
 fun MetricsHeaderCard(
     netCashFlow: Double,
     income: Double,
-    expenses: Double
+    expenses: Double,
+    currency: Currency
 ) {
     Card(
         modifier = Modifier
@@ -76,7 +79,7 @@ fun MetricsHeaderCard(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "Ksh %,.2f".format(netCashFlow),
+                text = CurrencyConverterService.format(netCashFlow, currency),
                 style = MaterialTheme.typography.displayLarge,
                 fontWeight = FontWeight.Bold,
                 color = if (netCashFlow >= 0) TextHighEmphasis else CoralDestructive
@@ -110,7 +113,7 @@ fun MetricsHeaderCard(
                         color = TextMediumEmphasis
                     )
                     Text(
-                        text = "Ksh %,.2f".format(income),
+                        text = CurrencyConverterService.format(income, currency),
                         style = MaterialTheme.typography.titleLarge,
                         color = BrightCyanAccent
                     )
@@ -137,7 +140,7 @@ fun MetricsHeaderCard(
                         color = TextMediumEmphasis
                     )
                     Text(
-                        text = "Ksh %,.2f".format(expenses),
+                        text = CurrencyConverterService.format(expenses, currency),
                         style = MaterialTheme.typography.titleLarge,
                         color = CoralDestructive
                     )

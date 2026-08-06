@@ -154,7 +154,7 @@ fun TransactionsScreen(
                             filteredTransactions,
                             key = { it.transactionId }
                         ) { transaction ->
-                            TransactionRow(transaction = transaction)
+                            TransactionRow(transaction = transaction, currency = state.currency)
                         }
                     }
                 }
